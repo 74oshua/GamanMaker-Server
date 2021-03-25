@@ -19,6 +19,16 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "run valheim",
+            "command": "C:/Program Files (x86)/Steam/steamapps/common/Valheim/Valheim.exe",
+            "args": [
+                "-console"
+            ],
+            "options": {
+                "cwd": "C:/Program Files (x86)/Steam/steamapps/common/Valheim/"
+            },
         }
     ]
 }
