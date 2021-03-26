@@ -15,6 +15,6 @@ namespace GamanMaker
 			Harmony.CreateAndPatchAll(typeof(Patches.Console_Patch));
 		}
 
-		Heightmap.Biome biome_override = Heightmap.Biome.None;
+		public static EnvSetup env_override = new EnvSetup();
 	}
 }

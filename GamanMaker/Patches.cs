@@ -22,32 +22,56 @@ namespace GamanMaker
 
 		public class Console_Patch
 		{
-			public static void InputText_Patch(String[] array)
-			{
-				UnityEngine.Debug.Log("x");
-			}
-
 			[HarmonyPatch(typeof(Console), "InputText")]
-			[HarmonyTranspiler]
-			public static IEnumerable<CodeInstruction> InputText_Transplier(IEnumerable<CodeInstruction> instructions)
+			[HarmonyPrefix]
+			public static void InputText_Patch(Console __instance)
 			{
-				bool matches = false;
-				foreach (CodeInstruction ins in instructions)
+				String command = __instance.m_input.text;
+				String[] ops = command.Split(' ');
+				
+				switch (ops[0])
 				{
-					yield return ins;
-					if (ins.opcode == OpCodes.Stelem_I2)
-					{
-						matches = true;
-					}
-					else
-					{
-						matches = false;
-					}
+					case "weather":
+						if (ops.Length > 1)
+						{
+							switch (ops[1])
+							{
+								case "list":
+									__instance.AddString("availible environments:");
+									String env_names = "none";
+									foreach (EnvSetup env in EnvMan.instance.m_environments)
+									{
+										env_names += ", " + env.m_name;
+									}
+									__instance.AddString(env_names);
+									break;
+								case "set":
+									if (ops.Length > 2)
+									{
+										if (ops[2] == "none")
+										{
+											GamanMaker.env_override.m_name = "";
+											EnvMan.instance.m_debugEnv = "";
+											break;
+										}
 
-					if (ins.Calls(typeof(String).GetMethod("Split")) && matches)
-					{
-						yield return new CodeInstruction(OpCodes.Call, typeof(Console_Patch).GetMethod("InputText_Patch"));
-					}
+										GamanMaker.env_override = EnvMan.instance.GetEnv(ops[2]);
+										EnvMan.instance.m_debugEnv = ops[2];
+									}
+									else
+									{
+										__instance.AddString("Specify an environment name. Use 'weather list' to get a list of names");
+									}
+									break;
+							}
+						}
+						else
+						{
+							__instance.AddString("Provide a weather command. Commands:");
+							__instance.AddString("list 				- List all availible environment names");
+							__instance.AddString("set <envname> 	- Set the current weather to that of the given environment by name");
+						}
+						break;
 				}
 			}
 		}
