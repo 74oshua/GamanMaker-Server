@@ -1,5 +1,3 @@
-
-
 namespace GamanMaker
 {
     public class WeatherSystem
@@ -21,6 +19,7 @@ namespace GamanMaker
                         string msg = pkg.ReadString(); // Read the message from the user.
                         pkg.SetPos(0); // Reset the position of our cursor so the client's can re-read the package.
                         ZRoutedRpc.instance.InvokeRoutedRPC(0L, "EventSetWeather", new object[] { pkg }); // Send our Event to all Clients. 0L specifies that it will be sent to everybody
+                        EnvMan.instance.m_debugEnv = msg;
                     }
                 } 
                 else

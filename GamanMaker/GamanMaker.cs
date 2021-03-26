@@ -13,7 +13,7 @@ namespace GamanMaker
 			System.Console.WriteLine("Starting GamanMaker-Server");
 			Harmony.CreateAndPatchAll(typeof(Patches.Game_Patch));
 			Harmony.CreateAndPatchAll(typeof(Patches.EnemyHud_Patch));
-			Harmony.CreateAndPatchAll(typeof(Patches.Console_Patch));
+			// Harmony.CreateAndPatchAll(typeof(Patches.Console_Patch));
 		}
 
 		public static EnvSetup env_override = new EnvSetup();
