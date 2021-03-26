@@ -41,12 +41,9 @@
         },
         {
             "label": "run valheim",
-            "command": "C:/Program Files (x86)/Steam/steamapps/common/Valheim/Valheim.exe",
-            "args": [
-                "-console"
-            ],
+            "command": "C:/Program Files (x86)/Steam/steamapps/common/Valheim dedicated server/start_headless_server.bat",
             "options": {
-                "cwd": "C:/Program Files (x86)/Steam/steamapps/common/Valheim/"
+                "cwd": "C:/Program Files (x86)/Steam/steamapps/common/Valheim dedicated server/"
             },
         }
     ]
