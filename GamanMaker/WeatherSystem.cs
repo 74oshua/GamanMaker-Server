@@ -91,5 +91,35 @@ namespace GamanMaker
         {
             return;
         }
+
+        public static void RPC_RequestSync(long sender, ZPackage pkg)
+        {
+            ZNetPeer peer = ZNet.instance.GetPeer(sender); // Get the Peer from the sender
+            if (peer != null)
+            { // Confirm the peer exists
+                ZPackage timePkg = new ZPackage();
+                String tod_str = EnvMan.instance.m_debugTime.ToString();
+                timePkg.Write(tod_str);
+
+                ZPackage weatherPkg = new ZPackage();
+                String env_str = EnvMan.instance.m_debugEnv;
+                weatherPkg.Write(env_str);
+                
+                ZRoutedRpc.instance.InvokeRoutedRPC(0L, "EventSetTime", new object[] { timePkg }); // Send our Event to all Clients. 0L specifies that it will be sent to everybody
+                ZRoutedRpc.instance.InvokeRoutedRPC(0L, "EventSetWeather", new object[] { weatherPkg }); // Send our Event to all Clients. 0L specifies that it will be sent to everybody
+                UnityEngine.Debug.Log("syncing with clients...");
+            } 
+            else
+            {
+                ZPackage newPkg = new ZPackage(); // Create a new ZPackage.
+                newPkg.Write("Peer doesn't exist"); // Tell them what's going on.
+                ZRoutedRpc.instance.InvokeRoutedRPC(sender, "BadRequestMsg", new object[] { newPkg }); // Send the error message.
+            }
+        }
+        
+        public static void RPC_EventSync(long sender, ZPackage pkg)
+        {
+            return;
+        }
     }
 }
