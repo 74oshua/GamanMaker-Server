@@ -22,6 +22,8 @@ namespace GamanMaker
 				ZRoutedRpc.instance.Register("EventSetTime", new Action<long, ZPackage>(WeatherSystem.RPC_EventSetTime));
 				ZRoutedRpc.instance.Register("RequestSync", new Action<long, ZPackage>(WeatherSystem.RPC_RequestSync));
 				ZRoutedRpc.instance.Register("EventSync", new Action<long, ZPackage>(WeatherSystem.RPC_EventSync));
+				ZRoutedRpc.instance.Register("RequestAdminSync", new Action<long, ZPackage>(WeatherSystem.RPC_RequestAdminSync));
+				ZRoutedRpc.instance.Register("EventAdminSync", new Action<long, ZPackage>(WeatherSystem.RPC_EventAdminSync));
 			}
 		}
 
