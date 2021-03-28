@@ -105,8 +105,9 @@ namespace GamanMaker
                 String env_str = EnvMan.instance.m_debugEnv;
                 weatherPkg.Write(env_str);
                 
-                ZRoutedRpc.instance.InvokeRoutedRPC(0L, "EventSetTime", new object[] { timePkg }); // Send our Event to all Clients. 0L specifies that it will be sent to everybody
-                ZRoutedRpc.instance.InvokeRoutedRPC(0L, "EventSetWeather", new object[] { weatherPkg }); // Send our Event to all Clients. 0L specifies that it will be sent to everybody
+                ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventTestConnection", new object[] { new ZPackage() });
+                ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetTime", new object[] { timePkg });
+                ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetWeather", new object[] { weatherPkg });
                 UnityEngine.Debug.Log("syncing with clients...");
             } 
             else
