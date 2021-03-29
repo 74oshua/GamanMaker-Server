@@ -182,7 +182,7 @@ namespace GamanMaker
                     }
 
                     pkg.SetPos(0);
-                    ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetVisible", new object[] { pkg });
+                    ZRoutedRpc.instance.InvokeRoutedRPC(0L, "EventSetVisible", new object[] { pkg });
                 }
             } 
             else
