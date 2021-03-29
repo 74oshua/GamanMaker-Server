@@ -105,10 +105,16 @@ namespace GamanMaker
                 String env_str = EnvMan.instance.m_debugEnv;
                 weatherPkg.Write(env_str);
                 
+                UnityEngine.Debug.Log("syncing with clients...");
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventTestConnection", new object[] { new ZPackage() });
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetTime", new object[] { timePkg });
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetWeather", new object[] { weatherPkg });
-                UnityEngine.Debug.Log("syncing with clients...");
+                foreach (string name in GamanMaker.invisible_players)
+                {
+                    pkg.Write(name);
+                    pkg.Write(false);
+                    ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetVisible", new object[] { pkg });
+                }
             } 
             else
             {
@@ -147,6 +153,47 @@ namespace GamanMaker
         }
         
         public static void RPC_EventAdminSync(long sender, ZPackage pkg)
+        {
+            return;
+        }
+
+        public static void RPC_RequestSetVisible(long sender, ZPackage pkg)
+        {
+            ZNetPeer peer = ZNet.instance.GetPeer(sender); // Get the Peer from the sender, to later check the SteamID against our Adminlist.
+            if (peer != null)
+            { // Confirm the peer exists
+                string peerSteamID = ((ZSteamSocket)peer.m_socket).GetPeerID().m_SteamID.ToString(); // Get the SteamID from peer.
+                if (
+                    ZNet.instance.m_adminList != null &&
+                    ZNet.instance.m_adminList.Contains(peerSteamID)
+                )
+                { // Check that the SteamID is in our Admin List.
+                    // set server tod
+                    string name = pkg.ReadString();
+                    bool vis = pkg.ReadBool();
+
+                    if (!vis && !GamanMaker.invisible_players.Contains(name))
+                    {
+                        GamanMaker.invisible_players.Add(name);
+                    }
+                    else if (vis && GamanMaker.invisible_players.Contains(name))
+                    {
+                        GamanMaker.invisible_players.Remove(name);
+                    }
+
+                    pkg.SetPos(0);
+                    ZRoutedRpc.instance.InvokeRoutedRPC(sender, "EventSetVisible", new object[] { pkg });
+                }
+            } 
+            else
+            {
+                ZPackage newPkg = new ZPackage(); // Create a new ZPackage.
+                newPkg.Write("You aren't an Admin!"); // Tell them what's going on.
+                ZRoutedRpc.instance.InvokeRoutedRPC(sender, "BadRequestMsg", new object[] { newPkg }); // Send the error message.
+            }
+        }
+        
+        public static void RPC_EventSetVisible(long sender, ZPackage pkg)
         {
             return;
         }
